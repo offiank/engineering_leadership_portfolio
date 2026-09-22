@@ -1,0 +1,21 @@
+spring:
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        model: ${OLLAMA_MODEL:llama3.1}
+        options:
+          temperature: 0.3
+          num-predict: 4096
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.example.req2plan.observability: INFO
+    org.springframework.ai: DEBUG

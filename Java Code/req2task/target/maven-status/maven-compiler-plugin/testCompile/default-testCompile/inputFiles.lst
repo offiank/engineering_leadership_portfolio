@@ -1,0 +1,11 @@
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/api/HealthControllerTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/api/PlanControllerTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/guardrails/InjectionDetectorTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/guardrails/InputValidatorTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/ingest/DocumentParserFactoryTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/ingest/DocxParserTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/ingest/PdfParserTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/ingest/TextParserTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/planning/OutputValidatorTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/planning/PlanServiceTest.java
+/Users/ankuraggarwal/Desktop/req2task/src/test/java/com/ankur/req2task/planning/PromptBuilderTest.java
