@@ -30,11 +30,15 @@ I build zero-downtime, high-scale distributed systems and grow the engineers who
 
 | Project | Summary | Stack |
 |---|---|---|
-| [Requirements-to-Design Generator](./ai/) | Ingests business requirements (PDF, DOC, DOCX) and generates a technical task breakdown plus a system design — automating the handoff between business analysis and engineering planning | Spring AI, Java |
+| [Requirements-to-Design Generator](./Java%20Code/req2task/) | Ingests business requirements (PDF, DOC, DOCX) and generates a technical task breakdown plus a system design — automating the handoff between business analysis and engineering planning | Spring AI, Java |
 
-This isn't a general-purpose document assistant — it's a purpose-built pipeline for one specific engineering workflow: turning unstructured requirements into actionable, structured engineering artifacts. See [ai/README.md](./ai/README.md) for architecture details and setup instructions.
+This isn't a general-purpose document assistant — it's a purpose-built pipeline for one specific engineering workflow: turning unstructured requirements into actionable, structured engineering artifacts. See [req2task/README.md](./Java%20Code/req2task/README.md) for architecture details and setup instructions.
 
 > **License note:** this project is shared for portfolio review. See [LICENSE](./LICENSE) for usage terms.
+
+## AI Engineering Practices
+
+- [Agent Guardrails](./ai/agent.md) — a general-purpose guardrail specification engineers can adopt when building AI-assisted tools or agentic workflows, covering scope boundaries, safe-failure behavior, and instruction-injection resistance.
 
 ## System Design
 
