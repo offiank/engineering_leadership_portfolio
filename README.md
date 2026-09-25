@@ -26,6 +26,24 @@ I build zero-downtime, high-scale distributed systems and grow the engineers who
 | [Zero-Downtime REST → Kafka Migration](./case-studies/rest-to-kafka-migration.md) | Led migration from synchronous REST to event pipelines on Kubernetes | 3 global regions, zero downtime, plus live Postgres schema migration |
 | [Apple Compact Rebate Tool Migration](./case-studies/apple-rebate-migration.md) | Migrated a Java monolith to 12 Spring Boot microservices | Strangler-fig pattern, zero incidents over 8 months, 25% p95 latency reduction |
 
+## AI-Powered Tools
+
+| Project | Summary | Stack |
+|---|---|---|
+| [Requirements-to-Design Generator](./ai/) | Ingests business requirements (PDF, DOC, DOCX) and generates a technical task breakdown plus a system design — automating the handoff between business analysis and engineering planning | Spring AI, Java |
+
+This isn't a general-purpose document assistant — it's a purpose-built pipeline for one specific engineering workflow: turning unstructured requirements into actionable, structured engineering artifacts. See [ai/README.md](./ai/README.md) for architecture details and setup instructions.
+
+> **License note:** this project is shared for portfolio review. See [LICENSE](./LICENSE) for usage terms.
+
+## System Design
+
+- [Device Attestation Architecture](./system-design/device-attestation-architecture.md) — cryptographic attestation across tens of thousands of field devices
+- [Multi-Bank Integration Layer](./system-design/multi-bank-integration-layer.md) — Kafka/Camel integration across 12 banks at 99.99% availability
+- [REST to Event-Driven Migration](./system-design/rest-to-event-driven-migration.md) — zero-downtime, multi-region migration strategy
+
+See [system-design/](./system-design/) for the full index — each doc goes deeper than the case studies above, with diagrams and the trade-offs behind key decisions.
+
 ## Leadership & Team Building
 
 - [Hiring & Team Growth](./leadership/hiring-and-team-growth.md) — building and retaining a 15-person, 4-team org
