@@ -17,5 +17,5 @@ server:
 
 logging:
   level:
-    com.example.req2plan.observability: INFO
+    com.ankur.req2task.observability: INFO
     org.springframework.ai: DEBUG
