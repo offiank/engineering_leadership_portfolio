@@ -38,7 +38,7 @@ This isn't a general-purpose document assistant — it's a purpose-built pipelin
 
 ## AI Engineering Practices
 
-- [Agent Guardrails](./ai/agent.md) — a general-purpose guardrail specification engineers can adopt when building AI-assisted tools or agentic workflows, covering scope boundaries, safe-failure behavior, and instruction-injection resistance.
+- [Agent Guardrails](./ai/agent.md) — a general-purpose guardrail specification engineers can adopt when building AI-assisted tools or agentic workflows.
 
 ## System Design
 
