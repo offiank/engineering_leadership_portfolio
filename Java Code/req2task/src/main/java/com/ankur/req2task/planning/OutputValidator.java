@@ -53,55 +53,65 @@ public class OutputValidator {
 
     /**
      * Validates the structure of the parsed plan against the expected schema.
+     * Issues are split into critical (the response is unusable without them)
+     * and non-critical (worth flagging but not worth failing the request over).
      */
-    public List<String> validateStructure(JsonNode plan) {
-        List<String> issues = new ArrayList<>();
+    public ValidationResult validateStructure(JsonNode plan) {
+        List<String> critical = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
 
         if (!plan.has("requirement_summary") || plan.get("requirement_summary").asText().isBlank()) {
-            issues.add("Missing or empty requirement_summary");
+            warnings.add("Missing or empty requirement_summary");
         }
 
         if (!plan.has("system_design")) {
-            issues.add("Missing system_design object");
+            critical.add("Missing system_design object");
         } else {
             JsonNode sd = plan.get("system_design");
             if (!sd.has("architecture_style"))
-                issues.add("system_design missing architecture_style");
+                warnings.add("system_design missing architecture_style");
             if (!sd.has("key_components"))
-                issues.add("system_design missing key_components");
+                warnings.add("system_design missing key_components");
             if (!sd.has("technology_stack"))
-                issues.add("system_design missing technology_stack");
+                warnings.add("system_design missing technology_stack");
         }
 
         if (!plan.has("tasks") || !plan.get("tasks").isArray() || plan.get("tasks").isEmpty()) {
-            issues.add("Missing or empty tasks array");
+            critical.add("Missing or empty tasks array");
         } else {
             JsonNode tasks = plan.get("tasks");
             for (int i = 0; i < tasks.size(); i++) {
                 JsonNode task = tasks.get(i);
                 if (!task.has("task_id"))
-                    issues.add("Task " + i + " missing task_id");
+                    critical.add("Task " + i + " missing task_id");
                 if (!task.has("title"))
-                    issues.add("Task " + i + " missing title");
+                    critical.add("Task " + i + " missing title");
                 if (!task.has("description"))
-                    issues.add("Task " + i + " missing description");
+                    warnings.add("Task " + i + " missing description");
             }
         }
 
-        return issues;
+        return new ValidationResult(critical, warnings);
     }
 
     /**
      * Full validation pipeline: extract, validate, deserialize.
+     * Throws if any critical structural issue is found — a plan missing
+     * tasks or system design is not a usable response, so callers should
+     * see a clear 422 rather than a silently incomplete 200.
      */
     public ProjectPlan validateAndParse(String rawResponse, String modelUsed) {
         JsonNode json = extractJson(rawResponse);
-        List<String> issues = validateStructure(json);
+        ValidationResult result = validateStructure(json);
 
-        if (!issues.isEmpty()) {
-            log.warn("Output validation issues: {}", issues);
-            // We still return the plan but log the issues. In production, you'd decide
-            // whether to retry or fail based on severity.
+        if (!result.warnings().isEmpty()) {
+            log.warn("Non-critical output validation issues: {}", result.warnings());
+        }
+
+        if (!result.critical().isEmpty()) {
+            log.error("Critical output validation issues: {}", result.critical());
+            throw new OutputValidationException(
+                    "Model output failed validation: " + String.join("; ", result.critical()));
         }
 
         try {
@@ -145,6 +155,9 @@ public class OutputValidator {
             cleaned = cleaned.substring(0, cleaned.length() - 3);
         }
         return cleaned;
+    }
+
+    public record ValidationResult(List<String> critical, List<String> warnings) {
     }
 
     public static class OutputValidationException extends RuntimeException {
