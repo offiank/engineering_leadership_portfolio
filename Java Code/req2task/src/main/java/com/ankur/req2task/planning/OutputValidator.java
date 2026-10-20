@@ -135,14 +135,17 @@ public class OutputValidator {
     }
 
     private String stripMarkdownFences(String text) {
-        String cleaned = text;
+        if (text == null) {
+            return "";
+        }
+        String cleaned = text.trim();
         if (cleaned.startsWith("```json")) {
-            cleaned = cleaned.substring(7);
+            cleaned = cleaned.substring(7).trim();
         } else if (cleaned.startsWith("```")) {
-            cleaned = cleaned.substring(3);
+            cleaned = cleaned.substring(3).trim();
         }
         if (cleaned.endsWith("```")) {
-            cleaned = cleaned.substring(0, cleaned.length() - 3);
+            cleaned = cleaned.substring(0, cleaned.length() - 3).trim();
         }
         return cleaned;
     }

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Req2TaskApplication<req2task>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ankur.req2task.Req2TaskApplication",
+            "projectName": "req2task",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

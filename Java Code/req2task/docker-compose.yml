@@ -1,4 +1,6 @@
 services:
+
+  # ── Ollama — local LLM server ───────────────────────────────────────────────
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -7,6 +9,44 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+
+  # ── req2task — Ollama (default, no API key needed) ──────────────────────────
+  app-ollama:
+    build: .
+    container_name: req2task-ollama
+    ports:
+      - "8080:8080"
+    environment:
+      AI_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: llama3.1
+    depends_on:
+      - ollama
+    profiles: ["ollama"]
+
+  # ── req2task — OpenAI ───────────────────────────────────────────────────────
+  app-openai:
+    build: .
+    container_name: req2task-openai
+    ports:
+      - "8080:8080"
+    environment:
+      AI_PROVIDER: openai
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}      # export before running
+      OPENAI_MODEL: gpt-4o
+    profiles: ["openai"]
+
+  # ── req2task — Anthropic (Claude) ───────────────────────────────────────────
+  app-anthropic:
+    build: .
+    container_name: req2task-anthropic
+    ports:
+      - "8080:8080"
+    environment:
+      AI_PROVIDER: anthropic
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}  # export before running
+      ANTHROPIC_MODEL: claude-3-5-sonnet-20241022
+    profiles: ["anthropic"]
 
 volumes:
   ollama_data:
