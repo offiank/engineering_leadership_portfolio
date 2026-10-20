@@ -1,4 +1,4 @@
-# req2task
+# Requirements-to-Design Generator
 
 `req2task` is a Spring Boot application that uses **Spring AI** to automatically convert unstructured software requirements into a structured project plan with discrete, actionable technical tasks.
 
@@ -6,7 +6,7 @@ It supports multiple AI providers — run locally for free with **Ollama**, or p
 
 ---
 
-## Features
+## What It Does
 
 - **Multi-Provider AI** — Switch between Ollama (local), OpenAI, and Anthropic at runtime via `AI_PROVIDER` env var.
 - **Requirements Ingestion** — Submit requirements as raw text, PDF, DOCX, or Markdown files.

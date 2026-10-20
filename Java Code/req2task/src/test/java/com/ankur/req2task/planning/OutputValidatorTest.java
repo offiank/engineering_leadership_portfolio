@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class OutputValidatorTest {
@@ -25,7 +23,7 @@ class OutputValidatorTest {
         JsonNode node = outputValidator.extractJson(raw);
         assertEquals("value", node.get("test").asText());
     }
-    
+
     @Test
     void testExtractJsonWithCommentary() {
         String raw = "Here is the JSON:\n{\"test\":\"value\"}\nHope it helps.";
@@ -40,13 +38,26 @@ class OutputValidatorTest {
     }
 
     @Test
-    void testValidateStructureMissingSummary() throws Exception {
+    void testValidateStructureMissingSummaryIsWarningNotCritical() throws Exception {
+        // requirement_summary is missing but tasks/system_design are also missing here,
+        // which ARE critical — so this case still reports both critical and warning issues.
         String raw = "{\"tasks\": []}";
         JsonNode node = new ObjectMapper().readTree(raw);
-        List<String> issues = outputValidator.validateStructure(node);
-        assertTrue(issues.contains("Missing or empty requirement_summary"));
-        assertTrue(issues.contains("Missing system_design object"));
-        assertTrue(issues.contains("Missing or empty tasks array"));
+        OutputValidator.ValidationResult result = outputValidator.validateStructure(node);
+
+        assertTrue(result.warnings().contains("Missing or empty requirement_summary"));
+        assertTrue(result.critical().contains("Missing system_design object"));
+        assertTrue(result.critical().contains("Missing or empty tasks array"));
+    }
+
+    @Test
+    void testValidateAndParseThrowsOnCriticalIssues() {
+        // Missing system_design and tasks entirely — should now fail loudly
+        // instead of silently returning an incomplete plan.
+        String raw = "{\"requirement_summary\": \"Just a summary, nothing else\"}";
+
+        assertThrows(OutputValidator.OutputValidationException.class,
+                () -> outputValidator.validateAndParse(raw, "llama3.1"));
     }
 
     @Test
