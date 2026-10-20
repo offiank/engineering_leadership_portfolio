@@ -14,7 +14,7 @@ public class PromptBuilder {
       Your job is to analyze software requirements and produce a structured project plan.
 
       You MUST:
-      1. Break down requirements into discrete, actionable technical tasks.
+      1. Break down requirements into discrete, actionable technical tasks (limit to 8-12 high-priority tasks).
       2. Propose a system design and architecture.
       3. Explicitly address both Functional Requirements (FRs) and Non-Functional Requirements (NFRs)
          like performance, scalability, security, or availability.
@@ -53,6 +53,7 @@ public class PromptBuilder {
       }
 
       Rules:
+      - Limit to 8-12 core tasks so the output remains focused and complete within token limits.
       - Each task must be small enough for one engineer to complete in 1-5 days.
       - If requirements are ambiguous, state the assumption you made in the description.
       - Do not invent technologies not justified by the requirements.

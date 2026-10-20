@@ -1,8 +1,10 @@
 package com.ankur.req2task.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record SystemDesign(
         @JsonProperty("architecture_style") String architectureStyle,
         @JsonProperty("key_components") List<String> keyComponents,

@@ -1,21 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# req2task — application configuration
+#
+# Switch the AI provider at runtime via:
+#   AI_PROVIDER=ollama      (default — local, no cost)
+#   AI_PROVIDER=openai      (GPT-4o, GPT-4o-mini …)
+#   AI_PROVIDER=anthropic   (Claude 3.5 Sonnet, Haiku …)
+#
+# For API-based providers also export the corresponding key:
+#   OPENAI_API_KEY=sk-...
+#   ANTHROPIC_API_KEY=sk-ant-...
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Active provider — driven by AI_PROVIDER env var, defaults to "ollama"
+ai:
+  provider: ${AI_PROVIDER:ollama}
+
 spring:
+  # ── Ollama (local) ──────────────────────────────────────────────────────────
   ai:
     ollama:
       base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
       chat:
-        model: ${OLLAMA_MODEL:llama3.1}
         options:
+          model: ${OLLAMA_MODEL:llama3.1}
           temperature: 0.3
           num-predict: 4096
+
+    # ── OpenAI / Compatible (Groq, Gemini, OpenRouter) ────────────────────────
+    openai:
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      api-key: ${OPENAI_API_KEY:REPLACE_ME}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o}
+          temperature: 0.3
+          max-tokens: ${OPENAI_MAX_TOKENS:4096}
+
+    # ── Anthropic (Claude) ────────────────────────────────────────────────────
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:REPLACE_ME}
+      chat:
+        options:
+          model: ${ANTHROPIC_MODEL:claude-3-5-sonnet-20241022}
+          temperature: 0.3
+          max-tokens: 4096
+
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 15MB
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 logging:
   level:
-    com.ankur.req2task.observability: INFO
+    com.ankur.req2task: INFO
     org.springframework.ai: DEBUG

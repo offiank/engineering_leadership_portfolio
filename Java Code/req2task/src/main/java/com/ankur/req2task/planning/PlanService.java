@@ -13,6 +13,7 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
 
 import java.util.List;
 
@@ -27,8 +28,29 @@ public class PlanService {
     private final InputValidator inputValidator;
     private final InjectionDetector injectionDetector;
 
-    @Value("${spring.ai.ollama.chat.model:llama3.1}")
+    @Value("${ai.provider:ollama}")
+    private String provider;
+
+    @Value("${spring.ai.ollama.chat.options.model:llama3.1}")
+    private String ollamaModel;
+
+    @Value("${spring.ai.openai.chat.options.model:gpt-4o}")
+    private String openaiModel;
+
+    @Value("${spring.ai.anthropic.chat.options.model:claude-3-5-sonnet-20241022}")
+    private String anthropicModel;
+
     private String modelName;
+
+    @PostConstruct
+    void resolveModelName() {
+        modelName = switch (provider.toLowerCase()) {
+            case "openai"    -> "openai/" + openaiModel;
+            case "anthropic" -> "anthropic/" + anthropicModel;
+            default          -> "ollama/" + ollamaModel;
+        };
+        log.info("Active model resolved: {}", modelName);
+    }
 
     public PlanService(ChatModel chatModel, PromptBuilder promptBuilder,
             OutputValidator outputValidator, InputValidator inputValidator,
@@ -71,10 +93,22 @@ public class PlanService {
             throw new PlanGenerationException("Model call failed: " + e.getMessage(), e);
         }
 
-        String rawOutput = response.getResult().getOutput().getContent();
+        String rawOutput = (response != null && response.getResult() != null && response.getResult().getOutput() != null)
+                ? response.getResult().getOutput().getText()
+                : null;
+
+        if (rawOutput == null || rawOutput.isBlank()) {
+            throw new PlanGenerationException("Model returned empty or null response");
+        }
 
         // 5. Validate and parse the output
-        ProjectPlan plan = outputValidator.validateAndParse(rawOutput, modelName);
+        ProjectPlan plan;
+        try {
+            plan = outputValidator.validateAndParse(rawOutput, modelName);
+        } catch (Exception e) {
+            log.error("Failed to parse and validate plan from model output", e);
+            throw new PlanGenerationException("Failed to parse plan from model response: " + e.getMessage(), e);
+        }
 
         log.info("Plan generated: {} tasks, model={}",
                 plan.tasks() != null ? plan.tasks().size() : 0,

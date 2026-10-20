@@ -48,7 +48,7 @@ class PlanControllerTest {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.requirementSummary").value("summary"));
+                .andExpect(jsonPath("$.plan.requirement_summary").value("summary"));
     }
 
     @Test
